@@ -1,185 +1,99 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { productos } from "../datos/productos";
 
 export default function Home() {
-
   const [marca, setMarca] = useState("Todos");
   const [categoria, setCategoria] = useState("Todos");
 
-  const marcas = [
-    "Todos",
-    "HP",
-    "Dell",
-    "Lenovo",
-    "ASUS",
-    "Acer",
-    "MSI",
-    "Huawei",
-    "Samsung"
-  ];
+  const marcas = ["Todos","HP","Dell","Lenovo","ASUS","Acer","MSI","Huawei","Samsung"];
+  const categorias = ["Todos","Gaming","Oficina","Touch","Estudiantes","Premium"];
 
-  const categorias = [
-    "Todos",
-    "Gaming",
-    "Oficina",
-    "Touch",
-    "Estudiantes",
-    "Premium"
-  ];
-
-  // para filtrar los productos 
-  const productosFiltrados = productos.filter((producto) => {
+  const productosFiltrados = productos.filter((p) => {
     return (
-      (marca === "Todos" || producto.marca === marca) &&
-      (categoria === "Todos" || producto.tipo === categoria)
+      (marca === "Todos" || p.marca === marca) &&
+      (categoria === "Todos" || p.categoria === categoria)
     );
   });
 
   return (
+    <main className="min-h-screen flex bg-gray-100 text-gray-900">
 
-    <main className="min-h-screen bg-gray-100 flex text-gray-900">
+      <aside className="w-72 bg-white border-r p-5">
+        <h2 className="text-2xl font-bold text-blue-600 mb-6">Filtros</h2>
 
-      {/* sidebar */}
-      <aside className="w-72 bg-white border-r border-gray-200 p-5">
-
-        <h2 className="text-2xl font-bold text-blue-600 mb-6">
-          Filtrar por
-        </h2>
-
-        {/* para el filtro de marcas */}
-        <p className="font-semibold text-gray-800 mb-2">
-          Marca
-        </p>
-
+        <p className="font-semibold mb-2">Marca</p>
         <div className="space-y-1 mb-6">
-
           {marcas.map((m) => (
-
             <button
               key={m}
               onClick={() => setMarca(m)}
-              className={`w-full text-left px-3 py-2 rounded-lg transition font-medium ${
-                marca === m
-                  ? "bg-blue-600 text-white"
-                  : "text-gray-800 hover:bg-gray-100"
+              className={`w-full text-left px-3 py-2 rounded-lg ${
+                marca === m ? "bg-blue-600 text-white" : "hover:bg-gray-100"
               }`}
             >
               {m}
             </button>
-
           ))}
-
         </div>
 
-        {/* para el filtro de categorias */}
-        <p className="font-semibold text-gray-800 mb-2">
-          Categoría
-        </p>
-
+        <p className="font-semibold mb-2">Categoría</p>
         <div className="space-y-1">
-
           {categorias.map((c) => (
-
             <button
               key={c}
               onClick={() => setCategoria(c)}
-              className={`w-full text-left px-3 py-2 rounded-lg transition font-medium ${
-                categoria === c
-                  ? "bg-blue-600 text-white"
-                  : "text-gray-800 hover:bg-gray-100"
+              className={`w-full text-left px-3 py-2 rounded-lg ${
+                categoria === c ? "bg-blue-600 text-white" : "hover:bg-gray-100"
               }`}
             >
               {c}
             </button>
-
           ))}
-
         </div>
-
       </aside>
 
-      {/* contenido */}
+     
       <section className="flex-1 p-8">
 
-        {/* header */}
-        <div className="mb-6">
+        <h1 className="text-3xl font-bold text-blue-600 mb-2">
+          Tienda de Laptops
+        </h1>
+        <p className="mb-6 text-gray-600">Catálogo de productos</p>
 
-          <h1 className="text-3xl font-bold text-blue-600">
-            Tienda de Laptops
-          </h1>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
 
-          <p className="text-gray-600">
-            Catálogo de productos disponibles
-          </p>
-
-        </div>
-
-        {/* productos */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-
-          {productosFiltrados.map((producto) => (
-
-            <div
-              key={producto.id}
-              className="bg-white rounded-xl shadow-md hover:shadow-xl hover:-translate-y-1 transition duration-300 overflow-hidden"
+          {productosFiltrados.map((p) => (
+            <Link
+              key={p.id}
+              href={`/producto/${p.id}`}
+              className="bg-white rounded-xl shadow hover:shadow-xl transition"
             >
+              <img
+                src={p.imagen}
+                className="h-44 w-full object-contain p-3"
+              />
 
-              {/* imagenes */}
-              <div className="h-44 bg-white flex items-center justify-center">
-
-                <img
-                  src={producto.imagen}
-                  alt={producto.nombre}
-                  className="w-full h-full object-contain p-3 hover:scale-105 transition duration-300"
-                />
-
-              </div>
-
-              {/* descripcion del producto */}
               <div className="p-4">
-
-                <h3 className="font-semibold text-gray-900 text-lg">
-                  {producto.nombre}
-                </h3>
-
-                <p className="text-blue-600 font-bold text-xl mt-1">
-                  ${producto.precio}
+                <h3 className="font-bold">{p.nombre}</h3>
+                <p className="text-blue-600 font-bold">${p.precio}</p>
+                <p className="text-sm text-gray-500">
+                  {p.marca} • {p.categoria}
                 </p>
-
-                <div className="mt-2 text-sm text-gray-700">
-
-                  <p>
-                    Marca:{" "}
-                    <span className="font-medium">
-                      {producto.marca}
-                    </span>
-                  </p>
-
-                  <p>
-                    Categoría:{" "}
-                    <span className="font-medium">
-                      {producto.tipo}
-                    </span>
-                  </p>
-
-                </div>
-
               </div>
-
-            </div>
-
+            </Link>
           ))}
 
         </div>
 
       </section>
-
     </main>
-
   );
 }
+
+ /*
 /* import Image from "next/image";
 
 export default function Home() {
