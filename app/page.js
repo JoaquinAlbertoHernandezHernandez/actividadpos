@@ -3,10 +3,174 @@
 import { useState } from "react";
 import Link from "next/link";
 import { productos } from "../datos/productos";
+import { useCarrito } from "./context/CarritoContext";
+
+export default function Home() {
+
+  const [marca, setMarca] = useState("Todos");
+  const [categoria, setCategoria] = useState("Todos");
+
+  const { carrito } = useCarrito();
+
+  /* acomodadito :) */
+  const marcas = [
+    "Todos",
+    "HP",
+    "Dell",
+    "Lenovo",
+    "ASUS",
+    "Acer",
+    "MSI",
+    "Huawei",
+    "Samsung"
+  ];
+
+  const categorias = [
+    "Todos",
+    "Gaming",
+    "Oficina",
+    "Touch",
+    "Estudiantes",
+    "Premium"
+  ];
+
+  const productosFiltrados = productos.filter((p) => {
+    return (
+      (marca === "Todos" || p.marca === marca) &&
+      (categoria === "Todos" || p.categoria === categoria)
+    );
+  });
+
+  return (
+    <main className="min-h-screen flex bg-gray-100 text-gray-900">
+
+      {/* los filtros */}
+      <aside className="w-72 bg-white border-r p-5">
+
+        <h2 className="text-2xl font-bold text-blue-600 mb-6">
+          Filtros
+        </h2>
+
+        <p className="font-semibold mb-2">Marca</p>
+
+        <div className="space-y-1 mb-6">
+          {marcas.map((m) => (
+            <button
+              key={m}
+              onClick={() => setMarca(m)}
+              className={`w-full text-left px-3 py-2 rounded-lg ${
+                marca === m
+                  ? "bg-blue-600 text-white"
+                  : "hover:bg-gray-100"
+              }`}
+            >
+              {m}
+            </button>
+          ))}
+        </div>
+
+        <p className="font-semibold mb-2">
+          Categoría
+        </p>
+
+        <div className="space-y-1">
+          {categorias.map((c) => (
+            <button
+              key={c}
+              onClick={() => setCategoria(c)}
+              className={`w-full text-left px-3 py-2 rounded-lg ${
+                categoria === c
+                  ? "bg-blue-600 text-white"
+                  : "hover:bg-gray-100"
+              }`}
+            >
+              {c}
+            </button>
+          ))}
+        </div>
+
+      </aside>
+
+      {/* contenido */}
+      <section className="flex-1 p-8">
+
+      
+        <div className="flex justify-between items-center mb-6">
+
+          <div>
+            <h1 className="text-3xl font-bold text-blue-600">
+              Tienda de Laptops
+            </h1>
+
+            <p className="text-gray-600">
+              Catalogo de productos
+            </p>
+          </div>
+
+          <Link
+            href="/carrito"
+            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-semibold transition"
+          >
+            Carrito ({carrito.length})
+          </Link>
+
+        </div>
+
+        {/* productos */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+
+          {productosFiltrados.map((p) => (
+
+            <Link
+              key={p.id}
+              href={`/producto/${p.id}`}
+              className="bg-white rounded-xl shadow hover:shadow-xl transition"
+            >
+
+              <img
+                src={p.imagen}
+                alt={p.nombre}
+                className="h-44 w-full object-contain p-3"
+              />
+
+              <div className="p-4">
+
+                <h3 className="font-bold">
+                  {p.nombre}
+                </h3>
+
+                <p className="text-blue-600 font-bold">
+                  ${p.precio}
+                </p>
+
+                <p className="text-sm text-gray-500">
+                  {p.marca} • {p.categoria}
+                </p>
+
+              </div>
+
+            </Link>
+
+          ))}
+
+        </div>
+
+      </section>
+    </main>
+  );
+}
+
+/* "use client";
+
+import { useState } from "react";
+import Link from "next/link";
+import { productos } from "../datos/productos";
+import { useCarrito } from "./context/CarritoContext";
 
 export default function Home() {
   const [marca, setMarca] = useState("Todos");
   const [categoria, setCategoria] = useState("Todos");
+  const { carrito } = useCarrito();
 
   const marcas = ["Todos","HP","Dell","Lenovo","ASUS","Acer","MSI","Huawei","Samsung"];
   const categorias = ["Todos","Gaming","Oficina","Touch","Estudiantes","Premium"];
@@ -58,11 +222,11 @@ export default function Home() {
      
       <section className="flex-1 p-8">
 
-        <h1 className="text-3xl font-bold text-blue-600 mb-2">
+       {/*  <h1 className="text-3xl font-bold text-blue-600 mb-2">
           Tienda de Laptops
         </h1>
-        <p className="mb-6 text-gray-600">Catálogo de productos</p>
-
+        <p className="mb-6 text-gray-600">Catálogo de productos</p> */  /*}
+       
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
 
           {productosFiltrados.map((p) => (
@@ -92,7 +256,7 @@ export default function Home() {
     </main>
   );
 }
-
+ 
  /*
 /* import Image from "next/image";
 

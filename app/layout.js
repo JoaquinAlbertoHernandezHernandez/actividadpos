@@ -1,4 +1,44 @@
-import { Geist, Geist_Mono } from "next/font/google";
+import "./globals.css";
+import { CarritoProvider } from "./context/CarritoContext";
+
+export const metadata = {
+  title: "Tienda de Laptops",
+  description: "POS en Next.js",
+};
+
+export default function RootLayout({ children }) {
+  return (
+    <html lang="es">
+      <body>
+        <CarritoProvider>
+          {children}
+        </CarritoProvider>
+      </body>
+    </html>
+  );
+}
+
+/* import "./globals.css";
+import { CarritoProvider } from "./context/CarritoContext";
+
+export const metadata = {
+  title: "Tienda de Laptops",
+  description: "POS en Next.js",
+};
+
+export default function RootLayout({ children }) {
+  return (
+    <html lang="es">
+      <body>
+        <CarritoProvider>
+          {children}
+        </CarritoProvider>
+      </body>
+    </html>
+  );
+}
+*/
+/*import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -26,3 +66,4 @@ export default function RootLayout({ children }) {
     </html>
   );
 }
+*/
