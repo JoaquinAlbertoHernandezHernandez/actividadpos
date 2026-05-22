@@ -10,9 +10,14 @@ export default function Home() {
   const [marca, setMarca] = useState("Todos");
   const [categoria, setCategoria] = useState("Todos");
 
-  const { carrito } = useCarrito();
+  const [mensaje, setMensaje] = useState("");
 
-  /* acomodadito :) */
+  const {
+    carrito,
+    agregarAlCarrito
+  } = useCarrito();
+
+
   const marcas = [
     "Todos",
     "HP",
@@ -25,6 +30,7 @@ export default function Home() {
     "Samsung"
   ];
 
+ 
   const categorias = [
     "Todos",
     "Gaming",
@@ -34,6 +40,7 @@ export default function Home() {
     "Premium"
   ];
 
+
   const productosFiltrados = productos.filter((p) => {
     return (
       (marca === "Todos" || p.marca === marca) &&
@@ -41,286 +48,160 @@ export default function Home() {
     );
   });
 
+ 
+  const agregarProducto = (producto) => {
+    agregarAlCarrito(producto);
+    setMensaje("Producto agregado al carrito");
+    setTimeout(() => {
+      setMensaje("");
+    }, 2000);
+  };
+
   return (
-    <main className="min-h-screen flex bg-gray-100 text-gray-900">
+    <main className="h-screen flex flex-col bg-gray-100 text-gray-900">
+      <header className="bg-gray-400 border-b shadow-sm px-8 py-4 flex justify-between items-center">
 
-      {/* los filtros */}
-      <aside className="w-72 bg-white border-r p-5">
+        <div>
+          <h1 className="text-3xl font-bold text-blue-600">
+            Tienda de Laptops
+          </h1>
+    
+        </div>
+        <Link
+          href="/carrito"
+          className="relative bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-xl font-semibold transition" >
+          🛒 Carrito
 
-        <h2 className="text-2xl font-bold text-blue-600 mb-6">
-          Filtros
-        </h2>
+          <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-6 h-6 flex items-center justify-center rounded-full font-bold">
+            {carrito.length}
+          </span>
+        </Link>
+      </header>
 
-        <p className="font-semibold mb-2">Marca</p>
-
-        <div className="space-y-1 mb-6">
-          {marcas.map((m) => (
-            <button
-              key={m}
-              onClick={() => setMarca(m)}
-              className={`w-full text-left px-3 py-2 rounded-lg ${
-                marca === m
-                  ? "bg-blue-600 text-white"
-                  : "hover:bg-gray-100"
-              }`}
-            >
-              {m}
-            </button>
-          ))}
+      {mensaje && (
+         <div className="fixed top-5 left-1/2 -translate-x-1/2 bg-green-500 text-white px-5 py-3 rounded-xl shadow-lg z-50">
+          {mensaje}
         </div>
 
-        <p className="font-semibold mb-2">
-          Categoría
-        </p>
+      )}
 
-        <div className="space-y-1">
-          {categorias.map((c) => (
-            <button
-              key={c}
-              onClick={() => setCategoria(c)}
-              className={`w-full text-left px-3 py-2 rounded-lg ${
-                categoria === c
-                  ? "bg-blue-600 text-white"
-                  : "hover:bg-gray-100"
-              }`}
-            >
-              {c}
-            </button>
-          ))}
-        </div>
+    
+      <div className="flex flex-1 overflow-hidden">
+        <aside className="w-72 bg-white border-r p-5 sticky top-0 h-screen overflow-y-auto">
+          <h2 className="text-2xl font-bold text-blue-600 mb-6">
+            Filtros
+          </h2>
+          <p className="font-semibold mb-2">
+            Marca
+          </p>
+          <div className="space-y-1 mb-6">
+            {marcas.map((m) => (
+              <button
+                key={m}
+                onClick={() => setMarca(m)}
+                className={`w-full text-left px-3 py-2 rounded-lg transition ${
+                  marca === m
+                    ? "bg-blue-600 text-white"
+                    : "hover:bg-gray-100"
+                }`}
+              >
+                {m}
+              </button>
 
-      </aside>
+            ))}
 
-      {/* contenido */}
-      <section className="flex-1 p-8">
-
-      
-        <div className="flex justify-between items-center mb-6">
-
-          <div>
-            <h1 className="text-3xl font-bold text-blue-600">
-              Tienda de Laptops
-            </h1>
-
-            <p className="text-gray-600">
-              Catalogo de productos
-            </p>
           </div>
 
-          <Link
-            href="/carrito"
-            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-semibold transition"
-          >
-            Carrito ({carrito.length})
-          </Link>
-
-        </div>
-
-        {/* productos */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-
-          {productosFiltrados.map((p) => (
-
-            <Link
-              key={p.id}
-              href={`/producto/${p.id}`}
-              className="bg-white rounded-xl shadow hover:shadow-xl transition"
-            >
-
-              <img
-                src={p.imagen}
-                alt={p.nombre}
-                className="h-44 w-full object-contain p-3"
-              />
-
-              <div className="p-4">
-
-                <h3 className="font-bold">
-                  {p.nombre}
-                </h3>
-
-                <p className="text-blue-600 font-bold">
-                  ${p.precio}
-                </p>
-
-                <p className="text-sm text-gray-500">
-                  {p.marca} • {p.categoria}
-                </p>
-
-              </div>
-
-            </Link>
-
-          ))}
-
-        </div>
-
-      </section>
-    </main>
-  );
-}
-
-/* "use client";
-
-import { useState } from "react";
-import Link from "next/link";
-import { productos } from "../datos/productos";
-import { useCarrito } from "./context/CarritoContext";
-
-export default function Home() {
-  const [marca, setMarca] = useState("Todos");
-  const [categoria, setCategoria] = useState("Todos");
-  const { carrito } = useCarrito();
-
-  const marcas = ["Todos","HP","Dell","Lenovo","ASUS","Acer","MSI","Huawei","Samsung"];
-  const categorias = ["Todos","Gaming","Oficina","Touch","Estudiantes","Premium"];
-
-  const productosFiltrados = productos.filter((p) => {
-    return (
-      (marca === "Todos" || p.marca === marca) &&
-      (categoria === "Todos" || p.categoria === categoria)
-    );
-  });
-
-  return (
-    <main className="min-h-screen flex bg-gray-100 text-gray-900">
-
-      <aside className="w-72 bg-white border-r p-5">
-        <h2 className="text-2xl font-bold text-blue-600 mb-6">Filtros</h2>
-
-        <p className="font-semibold mb-2">Marca</p>
-        <div className="space-y-1 mb-6">
-          {marcas.map((m) => (
-            <button
-              key={m}
-              onClick={() => setMarca(m)}
-              className={`w-full text-left px-3 py-2 rounded-lg ${
-                marca === m ? "bg-blue-600 text-white" : "hover:bg-gray-100"
-              }`}
-            >
-              {m}
-            </button>
-          ))}
-        </div>
-
-        <p className="font-semibold mb-2">Categoría</p>
-        <div className="space-y-1">
-          {categorias.map((c) => (
-            <button
-              key={c}
-              onClick={() => setCategoria(c)}
-              className={`w-full text-left px-3 py-2 rounded-lg ${
-                categoria === c ? "bg-blue-600 text-white" : "hover:bg-gray-100"
-              }`}
-            >
-              {c}
-            </button>
-          ))}
-        </div>
-      </aside>
-
-     
-      <section className="flex-1 p-8">
-
-       {/*  <h1 className="text-3xl font-bold text-blue-600 mb-2">
-          Tienda de Laptops
-        </h1>
-        <p className="mb-6 text-gray-600">Catálogo de productos</p> */  /*}
-       
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-
-          {productosFiltrados.map((p) => (
-            <Link
-              key={p.id}
-              href={`/producto/${p.id}`}
-              className="bg-white rounded-xl shadow hover:shadow-xl transition"
-            >
-              <img
-                src={p.imagen}
-                className="h-44 w-full object-contain p-3"
-              />
-
-              <div className="p-4">
-                <h3 className="font-bold">{p.nombre}</h3>
-                <p className="text-blue-600 font-bold">${p.precio}</p>
-                <p className="text-sm text-gray-500">
-                  {p.marca} • {p.categoria}
-                </p>
-              </div>
-            </Link>
-          ))}
-
-        </div>
-
-      </section>
-    </main>
-  );
-}
- 
- /*
-/* import Image from "next/image";
-
-export default function Home() {
-  return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.js file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+          <p className="font-semibold mb-2">
+            Categoría
           </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+          <div className="space-y-1">
+
+            {categorias.map((c) => (
+
+              <button
+                key={c}
+                onClick={() => setCategoria(c)}
+                className={`w-full text-left px-3 py-2 rounded-lg transition ${
+                  categoria === c
+                    ? "bg-blue-600 text-white"
+                    : "hover:bg-gray-100"
+                }`}
+              >
+                {c}
+              </button>
+
+            ))}
+
+          </div>
+        </aside>
+        <section className="flex-1 overflow-y-auto p-8">
+
+          <div className="bg-white rounded-2xl shadow p-8 mb-8 border"> 
+
+            <h2 className="text-4xl font-bold text-blue-600 mb-2">
+              Bienvenido - Encuentra tu Lap Top ideal para ti
+            </h2>
+
+          
+          </div>  
+          <div className="mb-6">
+            <h2 className="text-3xl font-bold text-blue-600">
+              Catalogo de productos 
+            </h2>
+         </div>
+         
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+
+            {productosFiltrados.map((p) => (
+
+              <div
+                key={p.id}
+                className="bg-white rounded-2xl shadow hover:shadow-xl transition overflow-hidden"   >
+
+               
+                <img
+                  src={p.imagen}
+                  alt={p.nombre}
+                  className="h-52 w-full object-contain p-4" />
+
+               
+                <div className="p-5">
+
+                  <h3 className="font-bold text-lg">
+                    {p.nombre}
+                  </h3>
+
+                  <p className="text-sm text-gray-500 mt-1">
+                    {p.marca} • {p.categoria}
+                  </p>
+
+                  <p className="text-2xl font-bold text-blue-600 mt-3">
+                    ${p.precio}
+                  </p>
+
+                  
+                  <div className="flex gap-2 mt-5">
+
+                    <Link
+                      href={`/producto/${p.id}`}
+                      className="flex-1 text-center bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 rounded-xl font-semibold transition"       >
+                      Ver producto
+                    </Link>
+
+                    <button
+                      onClick={() => agregarProducto(p)}
+                      className="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-xl font-semibold transition"              >
+                      Agregar
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      </div>
+    </main>
   );
 }
- */
+
