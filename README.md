@@ -12,7 +12,7 @@ La psgina permite visualizar diferentes laptops, consultar sus especificaciones 
 El objetivo del proyecto es mostrar el funcionamiento bssico de un sistema de catálogo y carrito de compras moderno.
 
 
-* Tecnologías utilizadas
+Tecnologías utilizadas:
 
 - Next.js
 - React
@@ -21,7 +21,7 @@ El objetivo del proyecto es mostrar el funcionamiento bssico de un sistema de ca
 - LocalStorage
 
 
-* Funciones principales
+Funciones principales:
 
 - Mostrar un catalogo de laptops
 - Filtrar productos por marca
